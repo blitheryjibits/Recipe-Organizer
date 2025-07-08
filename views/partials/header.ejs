@@ -10,7 +10,15 @@
     <nav class="flex gap-4 text-sm font-medium text-gray-700">
       <a href="/" class="hover:text-lime-600 transition">Home</a>
       <a href="/recipes/new" class="hover:text-lime-600 transition">Add Recipe</a>
-      <a href="/auth/signin" class="hover:text-lime-600 transition">Sign In</a>
+      <% if (username) { %>
+        <a href="/account" class="text-lime-700 font-medium hover:underline">
+          <%= username.charAt(0).toUpperCase() + username.slice(1) %>
+        </a>
+      <% } else { %>
+        <a href="/auth/signin" class="text-lime-700 font-medium hover:underline">
+          Sign In
+        </a>
+      <% } %>
     </nav>
   </div>
 </header>
