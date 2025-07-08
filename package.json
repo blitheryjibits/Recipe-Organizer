@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon app.js",
     "watch": "node --watch app.js",
-    "build:css": "postcss ./public/styles/styles.css -o ./public/styles/build.css --watch",
+    "build:css": "postcss ./public/styles/styles.css -o ./public/styles/build.css",
     "dev": "concurrently \"npm:build:css\" \"npm:start\""
   },
   "keywords": [],
@@ -14,10 +14,13 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "connect-pg-simple": "^10.0.0",
     "dotenv": "^17.0.1",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.18.1",
     "express-validator": "^7.2.1",
     "nodemon": "^3.1.10",
     "pg": "^8.16.3"
