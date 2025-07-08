@@ -1,4 +1,5 @@
 const pool = require('./pool');
+const bcrypt = require('bcrypt');
 
 const db = {
     async getCategories() {
@@ -120,7 +121,24 @@ const db = {
         }
     },
 
-    
+    async insertUser(username, email, password_hash) {
+        await pool.query(`
+            INSERT INTO users (name, email, password) VALUES ($1, $2, $3)`,
+        [username, email, password_hash])
+    },
+
+    async signin(email, password) {
+        try {
+            const userQuery = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+            const user = userQuery.rows[0];
+            if (!user) return null;
+            const match = await bcrypt.compare(password, user.password);
+            if (!match) return null;
+            return user;
+        } catch(err) {
+            return err;
+        }
+    }
 
 }
 
