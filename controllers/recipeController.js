@@ -16,7 +16,7 @@ const controller = {
         const {description, ingredients, categories} = req.body;
         const _ingredients = ingredients.split(',').map(str => str.trim()); // CS = comma separated
         const _categories = categories ? categories.split(',').map(c => c.trim()) : [];
-        const userId = Math.random() < 0.5 ? 1 : 2; // replace with user id after implementing auth
+        const userId = req.session.userId;
 
         try {
             result = await db.addRecipe(name, description, _ingredients, _categories, userId);
@@ -24,7 +24,18 @@ const controller = {
         } catch(err) {
             console.error(err);
         }
+    },
+
+    async deleteRecipe(req, res) {
+        const recipeId = req.params.id;
+        try {
+            await db.deleteRecipe(recipeId);
+            res.redirect('/auth/profile');
+        } catch(err) {
+            res.status(500).send(`error from recipeController: ${err}`);
+        }
     }
+    
 }
 
 module.exports = controller;
