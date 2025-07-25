@@ -16,7 +16,7 @@ const pgSession = require('connect-pg-simple')(session);
 app.use(
     session({
         store: new pgSession({ pool }),
-        secret: 'keyboard cat', // change using environment variables
+        secret: process.env.SESSION_SECRET, 
         resave: false,
         saveUninitialized: false,
         cookie: { maxAge: 1000 * 60 * 60 * 24 }
