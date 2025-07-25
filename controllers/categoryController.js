@@ -5,7 +5,7 @@ const controller = {
     async getCategoryRecipes(req, res) {
         try {
             const { category } = req.params;
-            const recipes = await db.getRecipes(category);
+            const recipes = await db.getRecipes(category.toLowerCase());
             res.render('recipes', { title: "Recipes", category: category, recipes: recipes });
         } catch(err) {
             res.status(500).send(`error getting recipes: ${err}`);
