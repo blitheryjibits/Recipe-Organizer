@@ -19,6 +19,7 @@ const db = {
             )`;
 
         const result = await pool.query(query, [category]);
+
         return result.rows;
     },
 
@@ -114,7 +115,6 @@ const db = {
 
         } catch (err) {
             await client.query('ROLLBACK');
-            console.error('Error inserting recipe:', err);
             throw err;
         } finally {
             client.release();
@@ -137,6 +137,35 @@ const db = {
             return user;
         } catch(err) {
             return err;
+        }
+    },
+
+    async getUserRecipes(userId) {
+        const result = await pool.query(`
+            SELECT 
+                r.id, r.name, r.description,
+                ARRAY_AGG(c.name) AS categories
+            FROM recipes r
+            LEFT JOIN recipe_categories rc ON r.id = rc.recipe_id
+            LEFT JOIN categories c ON rc.category_id = c.id
+            WHERE r.user_id = $1
+            GROUP BY r.id
+        `, [userId]);
+        return result.rows;
+    },
+
+    async deleteRecipe(recipeId) {
+        const client = await pool.connect();
+        try {
+             await client.query('DELETE FROM recipe_ingredients WHERE recipe_id = $1', [recipeId]);
+            await client.query('DELETE FROM recipe_categories WHERE recipe_id = $1', [recipeId]);
+            await client.query('DELETE FROM recipes WHERE id = $1', [recipeId]);
+            await client.query('COMMIT');
+        } catch (err) {
+            await client.query('ROLLBACK');
+            throw err;
+        } finally {
+            client.release();
         }
     }
 
