@@ -37,6 +37,33 @@ const controller = {
             return res.status(500).render('signin', { title:"signin", error: 'Something went wrong. Please try again.' });
         }
         
+    },
+
+    async signout(req, res) {
+        req.session.destroy((err) => {
+            if(err) {
+                return res.status(500).send('Error signing out');
+            }
+            res.clearCookie('connect.sid');
+            res.redirect('/');
+        })
+    },
+
+    async ensureAuthenticated(req, res, next) {
+        if(req.session && req.session.userId) {
+            return next();
+        }
+        res.redirect('/auth/signin');
+    },
+
+    async viewProfile(req, res) {
+        const userId = req.session.userId;
+        try {
+            const recipes = await db.getUserRecipes(userId);
+            res.render('profile', {title: 'Profile', recipes: recipes})
+        } catch(err) {
+            res.status(500).send(`Error getting user recipes: ${err}`);
+        }
     }
 
 }
