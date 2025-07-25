@@ -1,19 +1,26 @@
+
 <header class="bg-white/70 backdrop-blur sticky top-0 z-10 shadow-sm border-b border-lime-200">
   <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
     <div class="flex items-center gap-3">
       <a href="/" class="text-2xl font-extrabold text-lime-700 hover:text-lime-800 transition">
         Recipe Organizer
       </a>
-      <span class="text-sm text-gray-500 hidden sm:inline">Categorize. Cook. Conquer.</span>
+      <span class="text-sm text-gray-500 hidden sm:inline">Categorize. Create. Cook.</span>
     </div>
 
     <nav class="flex gap-4 text-sm font-medium text-gray-700">
       <a href="/" class="hover:text-lime-600 transition">Home</a>
       <a href="/recipes/new" class="hover:text-lime-600 transition">Add Recipe</a>
       <% if (username) { %>
-        <a href="/account" class="text-lime-700 font-medium hover:underline">
-          <%= username.charAt(0).toUpperCase() + username.slice(1) %>
-        </a>
+          <div class="dropdown font-medium relative">
+            <button class="dropdown-button text-lime-700"><%= username.charAt(0).toUpperCase() + username.slice(1) %></button>
+            <div class="dropdown-content hidden flex flex-col absolute block bg-white shadow-lg rounded-lg">
+              <a href="/auth/profile" class="hover:underline">View Profile</a>
+              <form action="/auth/signout" method="POST">
+                <button class="hover:underline">Sign Out</button>
+              </form>
+            </div>
+          </div>
       <% } else { %>
         <a href="/auth/signin" class="text-lime-700 font-medium hover:underline">
           Sign In
@@ -22,3 +29,9 @@
     </nav>
   </div>
 </header>
+
+<script>
+  document.querySelector(".dropdown-button").addEventListener("click", function () {
+    document.querySelector(".dropdown-content").classList.toggle("hidden");
+  });
+</script>
